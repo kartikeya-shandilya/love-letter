@@ -1,0 +1,10 @@
+
+P	Princess	8	1	lose
+C	Countess	7	1	nothing, must drop if have king/price
+K	King		6	1	exchange hands
+R	Prince		5	2	clean slate own, or opponent
+H	Housemaid	4	2	protected next turn
+B	Baron		3	2	compare, higher card wins
+I	Priest		2	2	see other's card
+G	Guard		1	5	take a guess at other's card
+
