@@ -1,13 +1,10 @@
 #!/usr/bin/env python
 
-from random import shuffle, randint
-from operator import itemgetter
-from collections import Counter, defaultdict
+from collections import defaultdict
 import pickle
 
-from get_action import get_action
 from utilities import determine_winner, print_deck, score
-from game import game_step, test_step, game_setup
+from game import game_step, game_setup
 from test_game import test_game
 
 # game-run counter
@@ -30,46 +27,48 @@ global PRINT
 PRINT = True
 
 while games_count < 10:
-	if PRINT: print "*"*30
-	games_count += 1
-	CARDS, SEEN, A, B, hmaid_A, hmaid_B, known_A, known_B, win_flag, game_states, cnt = game_setup()
-	while True:
-		if PRINT: print_deck(A, B, CARDS, SEEN)
-		win_flag, br_flag = determine_winner(win_flag, A, B, CARDS, PRINT)
-		if br_flag:
-			break
-		A, B, CARDS, SEEN, hmaid_A, hmaid_B, known_A, known_B, win_flag, decision = game_step(['A','B'][cnt%2], A, B, CARDS, SEEN, hmaid_A, hmaid_B, known_A, known_B, PRINT, strategy_loaded)
-		game_states.append(decision)
-		cnt = 1 - cnt
-	
-	for state in game_states:
-		move, situation = state[0], tuple(state[1:])
-		strategy_record_scr[situation] += score(move, win_flag)
-		strategy_record_tot[situation] += 1
+    if PRINT: print "*" * 30
+    games_count += 1
+    CARDS, SEEN, A, B, hmaid_A, hmaid_B, known_A, known_B, win_flag, game_states, cnt = game_setup(
+    )
+    while True:
+        if PRINT: print_deck(A, B, CARDS, SEEN)
+        win_flag, br_flag = determine_winner(win_flag, A, B, CARDS, PRINT)
+        if br_flag:
+            break
+        A, B, CARDS, SEEN, hmaid_A, hmaid_B, known_A, known_B, win_flag, decision = game_step(
+            ['A', 'B'][cnt % 2], A, B, CARDS, SEEN, hmaid_A, hmaid_B, known_A,
+            known_B, PRINT, strategy_loaded)
+        game_states.append(decision)
+        cnt = 1 - cnt
 
-	"""
+    for state in game_states:
+        move, situation = state[0], tuple(state[1:])
+        strategy_record_scr[situation] += score(move, win_flag)
+        strategy_record_tot[situation] += 1
+    """
 	for state in game_states:
 		move, choices, KNOWNS, HMAID, deck, drop = state
 		situation = tuple(state[1:])
 		strategy_loaded[(str(choices),str(KNOWNS),HMAID,str(deck))][drop] = strategy_record_scr[situation]/strategy_record_tot[situation]
 	"""
 
-	if games_count%100000 == 0:
-		num_games = 10000.
-		scoringA, scoringB = test_game(int(num_games), strategy_loaded, "eps-greedy")
+    if games_count % 100000 == 0:
+        num_games = 10000.
+        scoringA, scoringB = test_game(
+            int(num_games), strategy_loaded, "eps-greedy")
 
-		print "="*30
-		print "after #", games_count, "games..."
-		print "length of dict =", len(strategy_loaded.keys())
-		print "-"*20
-		print "A is the first player:"
-		for win_flag in scoringA:
-			print win_flag, scoringA[win_flag]/num_games
-		print "-"*20
-		print "B is the first player:"
-		for win_flag in scoringB:
-			print win_flag, scoringB[win_flag]/num_games
-
+        print "=" * 30
+        print "after #", games_count, "games..."
+        print "length of dict =", len(strategy_loaded.keys())
+        print "-" * 20
+        print "A is the first player:"
+        for win_flag in scoringA:
+            print win_flag, scoringA[win_flag] / num_games
+        print "-" * 20
+        print "B is the first player:"
+        for win_flag in scoringB:
+            print win_flag, scoringB[win_flag] / num_games
 
 # see strategy sheet after several games
 #print '\n','='*20,'\n','strategy_record... '
@@ -80,7 +79,6 @@ while games_count < 10:
 #pickle.dump(strategy_record_scr, open('strategy_record_scr_v0.pkl', 'wb'))
 #pickle.dump(strategy_record_tot, open('strategy_record_tot_v0.pkl', 'wb'))
 #pickle.dump(strategy_loaded, open('strategy_learned_v0.pkl', 'wb'))
-
 """
 # test game
 num_games = 10000
@@ -106,4 +104,3 @@ print "-"*20
 for win_flag in scoringB:
 	print win_flag, scoringB[win_flag]/10000.
 """
-
