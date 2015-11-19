@@ -12,7 +12,7 @@ games_count = 0
 #strategy_scr = pickle.load(open('strategy_record_scr_v0.pkl', 'rb'))
 #strategy_tot = pickle.load(open('strategy_record_tot_v0.pkl', 'rb'))
 #strategy_loaded = defaultdict(dict)
-strategy_loaded = pickle.load(open('strategy_learned_v0.pkl', 'rb'))
+strategy_loaded = pickle.load(open('strategy/strategy_learned_v0.pkl', 'rb'))
 #for state in strategy_scr:
 #	choices, KNOWNS, HMAID, deck, drop = state
 #	strategy_loaded[(str(choices),str(KNOWNS),HMAID,str(deck))][drop] = strategy_scr[state]/strategy_tot[state]
